@@ -1,0 +1,105 @@
+; minta illesztes
+; pattern matching
+; ha nem stringeket akarsz egymasra illeszteni
+; akkor ez megoldas
+; ha stringeket, akkor megoldas: RegExp
+; (amire emlekezni kell: #rx / #px)
+; minden mas nyelven a pattern matching igy nez ki:
+; (A, 5) = (3, X) hatasara: A = 3, X = 5
+; itt a kulcsszo a match
+; szintaxis: 
+; (match ertek [minta1 kif1] [minta2 kif2] ... )
+; szemantika:
+; az elso kif az erteke, amihez tartozo minta illesztheto az ertekre
+
+(define (szam->szo-v1 n)
+    (match n
+        [1 "egy"]
+        [2 "ketto"]
+        [3 "harom"]))
+
+(writeln (szam->szo-v1 2))
+
+(define (szam->szo-v2 n)
+    (cond                 ;cond = switch
+        [(= n 1) "egy"]
+        [(= n 2) "ketto"]
+        [(= n 3) "harom"]))
+
+(writeln (szam->szo-v2 2))
+
+; kul.: a matchnek van mellekhatasa, tudok vele erteket adni
+; ism.: parok: parokat a "." -tal hozok letre, pl.: (1 . 3)
+
+(writeln (match '(1 . 1) [(cons x 1) "elso"] [(cons 1 y) "masodik"]))
+
+; esetszetvalasztas, az egy opcionalis programozas eszkoz, nagyon eros,
+; mert nem kell if-et irni!
+; az if-et utaljuk a CC szam (ciklomatikus komplexitas) miatt
+; az esetszetvalasztas minden mas funkcionalis porgnyelvben
+; a parameter lista segitsegevelel tortenik:
+; length(ures lista) = 0
+; length(fej :: farok) = 1 + length(farok)
+; length({, 2, 3}), hatasa: fej = 1, farok = {2, 3}
+; esetszetvalasztas: egy fv-t megirok tobb verzioban es a
+; param list = formalis param list
+; ahol illeszkedik, az a verzio fut le.
+; sajnos esetszetvalasztas Java-ban, C#-ban, C++-ban nincs! :c
+; kiveve, ha vizitor terezesi mintat hasznalunk
+; mintak: singleton (legizibb), ..., vizitor(leghardabb)
+
+; -------------------!!!!!!!!!!!!!!!!!!!!!!!!-------------------------
+; HF: irj egy singleton-t, egy multion.t, egy proxy-t, egy dekorator-t,
+; egy prototype-ot
+; -------------------!!!!!!!!!!!!!!!!!!!!!!!!-------------------------
+
+; racketben is lehet esetszetvalasztast csinalni
+; irjuk meg a length-et cond-dal es match-el
+
+(define (length-v1 lst)
+    (cond
+        [(empty? lst) 0]
+        [else
+            (define fej (first lst))
+            (define farok (rest lst))
+            (define farok-ertek (length-v1 farok))
+            (+ 1 farok-ertek)]))
+(writeln (length-v1 (list 1 2 5)))
+
+(define (length-v2 lst)
+    (match lst
+        [(list ) 0]
+        [(cons fej farok)
+         (define farok-ertek (length-v2 farok))
+         (+ 1 farok-ertek)]))
+(writeln (length-v2 (list 1 2 5)))
+
+
+;fel.: sum-match
+(define (sum-v1 lst)
+    (cond
+        [(empty? lst) 0]
+        [else
+            (define fej (first lst))
+            (define farok (rest lst))
+            (define farok-ertek (sum-v1 farok))
+            (+ fej farok-ertek)]))
+(writeln (sum-v1 (list 2 4 6)))
+            
+(define (sum-v2 lst)
+    (match lst
+        [(list ) 0]
+        [(cons fej farok)
+         (define farok-ertek (sum-v2 farok))
+         (+ fej farok-ertek)]))
+(writeln (sum-v2 (list 2 4 6)))
+
+; fel.: reverse-t match-el
+(define (rev-match lst)
+    (match lst
+        [(list ) empty]
+        [(list _) lst]      ; _ amikor ugyse hasznalom fel ezer nem kell neki nev
+        [(cons fej farok)
+            (define farok-ertek (rev-match farok))
+            (append farok-ertek (list fej))]))
+(writeln (rev-match (list 1 2 3 4)))

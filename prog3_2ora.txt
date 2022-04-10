@@ -1,0 +1,105 @@
+#lang racket
+;ez egy komment
+(define x 5)	;x=5
+(define y (+ 4 1))	;y=4+1
+(writeln y)	;függvényhívás
+
+;define szintaxisa: (define név kif)
+;lambda kifejezés szintaxisa: (lambda (param lista) kiszámítási szabály)
+(define id (lambda (x) x))
+(writeln (id 5))
+
+;függvényhívás szintaxisa: (fgneve aktuális_param_lista)
+
+(define inc (lambda (x) (+ x 1)))
+(writeln (inc 5))
+
+
+(define dec (lambda (x) (- x 1)))
+(writeln (dec 5))
+
+
+(define square (lambda (x) (* x x)))
+(writeln (square 5))
+
+
+(define összead (lambda (x y) (+ x y)))
+(writeln (összead 5 3))
+
+(define kivon (lambda (x y) (- x y)))
+(writeln (kivon 5 3))
+
+(define összeadv2 (lambda (x) (lambda (y) (+ x y))))
+(writeln ((összeadv2 5) 3))
+
+;define 1. szintaxisa:      (define név kif)
+;define 2.szintaxisa:       (define (fgnév paramlista) kiszámításiszabály)
+
+(define (idv2 x) x)
+(writeln (idv2 5))
+
+(define (inc2 x) (+ x 1))
+(writeln (inc2 5))
+
+(define (square2 x)(* x x))
+(writeln (square 5))
+
+(define (összeadv3 x y) (+ x y))
+(writeln (összeadv3 5 4))
+
+(define (kivon2 x y) (- x y))
+(writeln (kivon2 5 4))
+
+;utasítás: szekvencia                                          szelekció      iteráció
+;          alapvetően az utasítások egymás után következnek    if, switch        for, while, do...while, foreach
+
+;utasítás angolul: statement
+;if szintaxisa:  (if (feltétel) igaz-ág-kif hamis-ág-kif)
+
+(define (max2 x y)
+  (if (> x y) x y))
+
+(writeln (max2 5 4))
+(writeln (max2 7 8))
+
+;and szintaxisa:  (and kif1 kif2 ...)
+
+(define (max3 x y z)
+  (if (and (> x y) (> x z)) x
+  (if (> y z) y z)))
+
+(writeln (max3 1 8 5))
+
+;max3 if nélkül
+
+(define (max3v2 x y z) (max2 x (max2 y z)))
+(writeln (max3v2 1 8 5))
+
+;max4 if nélkül
+
+;(define (max4 x y z w) (max3 x y(max2 z w)))
+(define (max4 x y z w) (max2 x (max2 y (max2 z w))))
+(writeln (max4 1 6 9 2))
+
+;többágú elágazás: cond, mint condition
+;cond szintaxisa:          (cond [ág1] [ág2] ... [else kif])
+;ahol az ág szintaxisa:    [(feltétel) kif]
+
+(define (szám->szó x)
+  (cond
+    [(= x 1) "egy"]
+    [(= x 2) "kettő"]
+    [(= x 3) "három"]))
+
+
+(writeln (szám->szó 1))
+(writeln (szám->szó 2))
+
+;két sztring összehasonlítása: (equal? str-kif1 str-kif2)
+
+(define (szó->szám x)
+  (cond
+    [(equal? x "egy") 1]
+    [(equal? x "kettő") 2]
+    [(equal? x "három") 3]))
+(writeln (szó->szám "három"))

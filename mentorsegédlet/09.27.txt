@@ -1,0 +1,84 @@
+(define (my-length lst)
+    (cond
+        [(empty? lst) 0]
+        [else (+ 1 (my-length (rest lst))) ]))
+;(writeln (my-length (list 1 1 1)))
+
+; rekurziv adatszerkezetet rekurzivan dolgozunk fel
+; lista eseten: meghivom onmagamat a lista farkara
+;---------------------------------------------------------
+; fel mysum visszaadja a listaban lev szamok osszeget
+; ha ures visszateresi ertek 0
+; ha nem ures akkor meghivom onmagamat a lista farkara
+; ez visszaadja a lista farkanak szummajat, amihez a fejet hozza kell adni
+
+(define (my-sum szkk)
+    (cond
+        [(empty? szkk) 0]
+        [else (+ (first szkk) (my-sum (rest szkk)))]))
+;(writeln (my-sum (list 2 4 2)))
+;---------------------------------------------------------
+; my-prod osszeszorozza a listaban levo szamokat
+; megegyees szerint ures lista eseten 1-et ad vissza
+
+(define (my-prod lst)
+    (cond
+        [(empty? lst) 1]                                ; nem rekurziv ag
+        [else (* (first lst) (my-prod (rest lst)))]))   ; rekurziv ag
+;(writeln (my-prod (list )))
+;---------------------------------------------------------
+; my-max visszaadja a listaban levo legnagyobb 
+; if szintxisa: (if (felteel) igaz-kif hamis-kif)
+
+(define (my-max lst)
+    (cond
+        [(empty? lst) +nan.0]
+        [(empty? (rest lst)) (first lst)]
+        [else 
+            (define fej (first lst))
+            (define farok-ertek (my-max(rest lst)))
+            (if (> fej farok-ertek) fej farok-ertek)]))
+;(writeln (my-max(list 2 4 3))) 
+
+;(define (my-maxi lst)
+;    (cond
+;        [(empty? lst) +nan.0]
+;        [(empty? (rest lst)) (first lst)]
+;        [else
+;            (if (> (first lst) (my-maxi(rest lst))))]))
+;(writeln (my-maxi(list 2 9 5))) nemjo
+
+;mysum ket plusz ket define-al
+(define (my-sumi szkk)
+    (cond
+        [(empty? szkk) 0]
+        [else 
+            (define fej (first szkk))
+            (define farok-ertek (my-sumi(rest szkk)))
+            (+ fej farok-ertek)]))
+;(writeln (my-sum (list 2 4 2))) 
+
+;-----------------------------------------
+; lista keszites harom modja:
+;(writeln (list 1 2 3))
+;(writeln (quote (1 2 3)))
+;(writeln (quote (1 . (2 . (3)))))
+;-----------------------------------------
+
+; ------ DOT ----------
+; A .-tal un. parokat hozhatunk letre
+(define par1 (quote (1 . 2)))
+;(writeln par1)
+; car-ral kerdezem le a oar elso elemet
+; cdr-rel kerdezem le a par masodik elemet
+;(writeln (car par1))
+; a caar mukodik, de ez listan, mert a lista egy lancolt lista, ami
+; fejbol es farokbol all, ahol a farok szinten lancolt lista
+; first helyett lehet car-t hasznalni, illetve rest helyett cdr-t
+; valamint empty helyett hasznalhato a null
+
+(define (my-length2 lst)
+    (cond
+        [(null? lst) 0]
+        [else (+ 1 (my-length2 (cdr lst)))]))
+(writeln (my-length2 (quote(1 1 1))))

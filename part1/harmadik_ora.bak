@@ -1,0 +1,7 @@
+#lang racket
+(define alma 5)
+(println alma)
+(define (f x) (+ x 1))
+(println (f 5))
+;a lista rekurziv adatszerkezet, hiszen a lista farka lista.
+;a fa rekurziv adatszerkezet, hiszen a fa ágai fák

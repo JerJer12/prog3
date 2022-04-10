@@ -1,0 +1,59 @@
+(define x 5) ; megjegyzes sor vegeig
+(define ujdolog "ertek") ; (define azonosít kifejezés)
+;(writeln ujdolog)
+; ---------------------------------------------------------
+
+;(define g (lambda(x) (lambda(y) ( + x y)))) ; lambda szint: (lambda (kotott valtozok) (kiszamitasi szabaly))
+;(define h (g 5))
+;(writeln (h 3))
+;----------------------------------------------------------
+
+;(define (add x y) "hello" (+ x y)) ; (define (fvneve paramlista) kifejezesek), az utolso kifejezes a fv visszateresi erteke
+;(writeln (add 5 3))
+
+
+; fv def altalaban igy nez ki:
+;(define (fvnev param1)
+;    (define reszertek1 5)
+;    (define reszertek2 8)
+;        (+ reszertek1 reszertek2 param1)) ;kiszamitasi szabaly
+        
+;(writeln (fvnev 7)) ;fv hivas (fvneve aktualis param lista) ; nemjo ):
+
+;--------------------
+;(define time (lambda (x y) (* x y)))
+
+;(define (time2 x y) (* x  y))
+;(writeln (time 3 2))
+
+;------------------
+
+;(define square (lambda (x) (* x x))) ; fel. ugyanezt lambda nelkul (2. verzio)
+;(define (square2 x) (* x x))
+
+;(writeln (square2 5))
+
+;------------------
+
+
+;(define (nagyobb x y) (if ( > x y) x y)) ; fel. ugyanezt labdaval (1. verzio)
+;(define nagyobb2 (lambda (x y) (if (> x y) x y)))
+
+;(writeln (nagyobb2 5 3))
+
+;-------------
+
+
+; if szint. (if (logikai kifejezes) kifejezes1 kifejezes2) ha a logikai kifejezes igaz akkor a kifejezes1 lesz az erteke, ha hamis, akkor a kifejezes2 az erteke
+
+;(define (kisebb k1 k2) (if (< k1 k2) k1 k2))
+;(writeln (kisebb 5 3))
+
+
+;(writeln (number? 5))
+;(writeln (number? "hello"))
+
+;(define (kisebb? k1 k2) (if (> k1 k2) #f #t))
+;(writeln (kisebb? 5 3))
+
+(define (nagyobb? n1 n2) (if (> n1 n2) #t #f))

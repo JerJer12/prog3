@@ -1,0 +1,77 @@
+#lang racket
+;zh1
+;1. feladat my-length +formazott kiiras:
+;(writeln (my-length (list 1 2 5))) = "A lista hossza: 3"
+;2. feladat my-paros-max + formazott kiiras
+;a listaban levo paros szamok kozul visszadja a legnagyobbat
+;ha a lista ures, vagy nincs benne paros szam, akkor +nan.0-t ad vissza
+;(writeln (my-paros-max (list 2 7 6))) = "A legnagyobb paros szam: 6"
+;3. feladat lista-paratlanok-halmaza
+;a listaban levo paratlan szamok szamok halmazat adja vissza,formazott kiiras nem kell
+;4. feladat my-reverse: kap egy listat es megforditja, ne hasznaljon akku-t
+;5. feladat my-reverse akku-val
+
+;1. feladat
+(define (my-length lst)
+  (cond
+    [(empty? lst) 0]
+    [else
+     (define farok (rest lst))
+     (+ 1 (my-length farok))]))
+(println (string-append "A lista hossza: " (number->string (my-length (list 1 2 5)))))
+;2. feladat
+(define (paros? x) (= 0 (modulo x 2)))
+(define (szuro feltetel lst)
+  (cond
+    [(empty? lst) empty]
+    [else
+          (define fej (first lst))
+          (define farok (rest lst))
+          (define farok-ertek (szuro feltetel farok))
+          (if(feltetel fej) (cons fej farok-ertek) farok-ertek)]))
+(define (my-paros-max lst)
+  (cond
+    [(empty? lst) +nan.0]
+    [(empty? (rest lst)) (first lst)]
+    [else
+     (define fej (first lst))
+     (define farok (rest lst))
+     (define farok-ertek (my-paros-max farok))
+     (if (> fej farok-ertek) fej farok-ertek)
+     ]))
+(println (string-append "A legnagyobb páros szám: " (number->string (my-paros-max (szuro paros? (list 2 7 6))))))
+;3. feladat
+(define (paratlan? x) (= 1 (modulo x 2)))
+(define (lista-paratlanok-halmaz lst)
+  (cond
+    [(empty? lst) empty]
+    [else
+     (define fej (first lst))
+     (define farok (rest lst))
+     (define farok-ertek (lista-paratlanok-halmaz farok))
+     (if(paratlan? fej)
+        (if (member fej farok) farok-ertek (cons fej farok-ertek))
+        farok-ertek)
+     ]))
+(println (lista-paratlanok-halmaz (list 1 2 3 4 5 6 7 8 3 5 1 2)))
+;4. feladat
+(define (my-reverse lst)
+  (cond
+    [(empty? lst) '()]
+    [else
+     (define fej (first lst))
+     (define farok (rest lst))
+     (define farok-ertek (my-reverse farok))
+     (append farok-ertek (list fej))]))
+(println (my-reverse (list 1 2 3 4)))
+;5. feladat
+(define (my-reverse1 lst)(my-reverse2 lst '()))
+(define (my-reverse2 lst akku)
+  (cond
+    [(empty? lst) akku]
+    [else
+     (define fej (first lst))
+     (define farok (rest lst))
+     (define uj-akku (append (list fej) akku))
+     (my-reverse2 farok uj-akku)]))
+(println (reverse (list 5 6 7 8 3)))

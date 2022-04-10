@@ -1,0 +1,122 @@
+(define (paros? n) (= 0 (modulo n 2)))
+;(writeln (paros? 10))
+;ism.
+(define (my-sum input-lista)
+    (cond
+        [(empty? input-lista) 0]
+        [(lista? input-lista) 
+            (define fej (first input-lista))
+            (define farok-ertek (my-sum (rest input-lista)))
+            (+ fej farok-ertek)]))
+;(writeln (my-sum (list 10 20 30)))
+        
+;listat ugy dolgozok fel, hogy meghivom onmagam rekurzivan a farokra
+
+;--------------------------
+;paros-szuro, kiszuroma paros szamokat egy listabol egy kimeneti listaba
+;hint1 hasznalni kell a cons-t, amivel a fejet lehet hozzatenni a listahoz
+;pl. paros-szuro(1 2 3 4) = (2 4) = fej eldob meghiv farok
+;pl. paros-szuro(2 3 4 5) = (2 4) = megtart fej meghiv fark
+
+(define (paros-szuro x)
+    (cond
+        [(empty? x) empty]                              ; nem rekurziv ag            
+            [(list? x)                                  ; rekurziv ag
+            ; szetszedem fejre es farokra
+            (define fej (first x))                      
+            (define farok-ertek (paros-szuro (rest x))) ; rekurziv hivas
+            (if (paros? fej)                            ; teszt
+                (cons fej farok-ertek)                  ; megtart  
+                farok-ertek)]))                         ; eldob
+                
+(writeln (paros-szuro(list 1 2 3 4 5)))
+
+; altalanosan, igy tobbfele szurore hasznalhato, plusz 1 parameter segitsegevel
+
+
+(define (altalanos-szuro p x)
+    (cond
+        [(empty? x) empty]                                      ; nem rekurziv ag            
+            [(list? x)                                          ; rekurziv ag
+            ; szetszedem fejre es farokra
+            (define fej (first x))                      
+            (define farok-ertek (altalanos-szuro p (rest x)))   ; rekurziv hivas
+            (if (p fej)                                         ; teszt
+                (cons fej farok-ertek)                          ; megtart  
+                farok-ertek)]))                                 ; eldob
+(writeln (altalanos-szuro paros? (list 2 3 4 5)))                
+(define (inter35? szam) (and (>= szam 3) (<= szam 5)))
+(writeln (altalanos-szuro inter35? (list 2 3 4 5)))
+
+(define temp (altalanos-szuro paros? (list 2 3 4 5)))                
+(writeln (altalanos-szuro inter35? temp))
+
+;---------------------------------------
+; member x lista
+; hamisat ad vissza ha x nincs a listaban
+; egyebkent nem hamisat
+; racket-ben ami nem hamis, az igaznak szamit a tesztekben
+(writeln (member 5 (list 1 5 6 8))) ; 5 6 8-at adja vissza
+(writeln (if (member 5 (list 1 5 6 8)) "benne van" "nincs benne" ))
+
+;--------------------------------------
+; halmaz kezeles
+; halmaz helyett listat hasznalunk, ugy teszunk, mintha a lista halmaz lenne
+; lista->halmaz kap listat, visszaad listat, amiben mar nincs ismetlodo elem
+; halmaz ket tul:
+    ; 1. nincs benne sorrend
+    ; 2. nincs benne ismetlodes
+; pl.: lista->halmaz(1 2 1 3 4 1) = (1 2 3 4) = (2 3 4 1) = ...
+; hint: fejet megtartom vagy eldobom
+; ha a fej benne van a farokban akkor a fejet eldobom, egyebkent marad
+
+(define (lista->halmaz lst)
+    (cond
+        [(empty? lst) empty]
+        [(list? lst)
+            (define fej (first lst))      
+            (define farok (rest lst))
+            (define farok-ertek (lista->halmaz farok))
+            (if (member fej farok)
+                farok-ertek
+                (cons fej farok-ertek))]))
+            
+(writeln (lista->halmaz(list 1 2 1 3 4 1)))
+
+;-------------------------------
+; unio: kap ket halmazt (listat), visszaadja az uniojukat
+; pl.: unio((1 2 3) (2 3 4)) = (1 2 3 4)
+; hint: a masodik listan megyek rekurzivan
+; nem reku ag: uni(x ures) = x
+; reku ag: uni(x (fej, farok)) = ha fej benne van x-ben eldob, egyebkent megtart
+
+(define (my-unio lista1 lista2)
+    (cond
+        [(empty? lista2) lista1]
+        [else 
+            (define fej (first lista2))
+            (define farok (rest lista2))
+            (define farok-ertek (my-unio lista1 farok))
+            (if (member fej lista1) 
+                farok-ertek
+                (cons fej farok-ertek))]))
+(writeln (my-unio (list 1 2 3) (list 2 3 4)))
+
+; my-intersectio: metszet
+; kap ket halmazt (listat) es visszaadja a metszetet
+; pl. my-intersectio((1 2 3) (2 3 4))
+;hint: ha benne van megtartom, egyebkent eldob
+
+(define (my-intersectio lista1 lista2)
+    (cond
+        [(empty? lista1) empty]
+        [(empty? lista2) empty]
+        [else
+            (define fej (first lista2))
+            (define farok (rest lista2))
+            (define farok-ertek (my-intersectio lista1 farok))
+            (if (member fej lista1)
+                (cons fej farok-ertek)
+                farok-ertek)]))
+                
+(writeln (my-intersectio(list 1 2 3) (list 2 3 4)))

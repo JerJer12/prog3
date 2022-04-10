@@ -1,0 +1,8 @@
+#lang racket
+(define lista1 (cons 1(cons 2 (cons 3 empty))))
+(define lista2 (list 1 2 3))
+(define lista3 '(1 2 3))
+
+(writeln lista1)
+(writeln lista2)
+(writeln lista3)

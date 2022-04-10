@@ -1,0 +1,44 @@
+(define x 5)                ;(define nev kif)
+(define (f x) (+ 1 x))      ;(define (fvnev paramlista) kifejezesek)
+
+;(writeln (f 5))
+;-----------
+; LISTA
+; A lisp alapu nyelveknek a kozponti adatszerkezete a lista
+; A lista egy rekurziv adatszerkezet, olyan ertelemben, hogy a lista
+; farka szinten lista
+; A lista ket reszbol all: fej + farok (hivatkas: fej -> first, farok -> rest (mas nyelvekben head es tail))
+; A lista feje mindig elem, a farka list 
+(define lista1 (list 1 2 3)) ;szintaxisa: (list kifejezesek)
+;(writeln lista1)
+;(define lista2 '(1 2 3))    ; szintaxisa: '(kifejezesek)
+;(writeln lista2)
+; a fejet a first adja vissza, a farkat a rest
+;fvhivas szintaxisa: (fvneve akt_param_list)
+(define lista2 (rest lista1))
+(define lista3 (rest lista2))
+(define lista4 (rest lista3))
+;(writeln (empty? lista4))
+;(writeln (string-append "A lista feje: " (number->string (first lista1))))
+;(writeln (rest lista1))
+;---------------------------
+;(define (g x) (g x))
+;(writeln (g 5))
+
+;(define z empty)
+;(writeln
+ ;   (cond
+;            [(number? z) "ez egy szam"]
+;            [(boolean? z) "ez egy igaz hamis"]
+;            [(string? z) "ez egy string"]
+;            [(empty? z) "ez egy üres lista"]
+;            [(list? z) "ez egy lista"]
+;            [else "nem tudom mi ez"]))
+;
+; eletunk elso lista-t feldolgozo fv-e
+; my-length, visszaadja a fv elemszamat
+(define (my-length lista)
+    (cond
+        [(empty? lista) 0]
+        [else (+ 1 (my-length (rest lista)))]))
+(writeln (my-length (list 2 2 2)))

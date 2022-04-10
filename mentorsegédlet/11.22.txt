@@ -1,0 +1,96 @@
+Design by Contract ~ Szerződés alapú programozás
+
+Úgy képzeljük, hogy a hívó és hívott közt szerződés van.
+- hívott: egy metódus (fv.)
+- hívó:	  egy metódus (fv.)
+
+A szerződés a következő:
+Ha a hívó betartja a hívott előfeltételét, akkor a hívott 
+garantálja az utófeltételének teljesülését.
+Mit jelent? Minden metódusnak van elő- és utófeltétele.
+előfeltétel ~ pre-condition
+utófeltétel ~ post-condition
+
+Olyan metódus, ahol ismert az előfeltétel:
+- Mi az előfeltétele a bináris-keresés(lista, szám)-nak?
+	A bemeneti listának rendezettnek kell lennie!
+- Mi az előfeltétele az SQRT(szám) fv-nek?
+	A bemeneti szám >= 0-nak kelle lennie!
+- Rajzoljunk háromszöget a,b és c oldalhosszakkal. Mi az előfeltétel?
+	Előfeltétel: a bemeneti 3 számra igaznak kell lennie, hogy bármely 
+	2 oldal összege nagyobb, mint a harmadik oldal.
+Kérdés: miről beszél az előfeltétel?
+	A bemenetről! (másról is, majd később)
+Az előfeltétel megadja, hogy milyennek kell lennie a bemenetnek.	 
+bemenet ~ paraméterek ~ input
+
+Ismert utófeltételek:
+- Bináris keresés utófeltétele?
+	Ha benne van a keresett elem a listában, akkor az indexét adja vissza,
+	ha nincs, akkor -1-et adjon vissza.
+Honnan tudom, hogy -1-et fog visszaadni?
+Java esetén a metódus előtt: /**
+C# esetén a metódus előtt:  ///
+Ez az ún. öndokumentáló megjegyzés. Amit beleírsz, az az api informális része.
+Kérdés: miről beszél az utófeltétel?
+	A visszatérési értékről. (másról is, majd később)
+
+http://aries.ektf.hu/~gkusper/ProgTechKonyv.v.1.3.2.pdf
+Bank betét példa:
+bankbetét 2 metódussal
+- pénzt betesz ~ deposit
+- pénzt kivesz ~ wihdraw
+Kivesz előfeltétele: - max annyit vehetek ki, amennyi van a számlán
+		     - min 500Ft.	
+racketben: define/contract-tal kell létrehozni a fv.-t.
+Szintaxisa: (define/contract (fv. nev paramlista) (szerzodes) fv.torzs)
+	    (define (fv.nev paramlista) fv.torzs)
+Szerződés szintaxisa: (-> elofeltetel utofeltetel)
+intuíció: 
+- PluszEgy: N -> N
+- Összeadás: N×N -> N
+- SQRT: R+ -> R+
+fv.: miből   -> mibe
+fv.: bemenet -> kimenet
+
+;(define (post-inc? szoroskiskutya) ) ; ): majd kesobb
+;(define/contract (inc x) (-> number? post-inc?) (+ x 1))
+;(writeln (inc -2))
+
+
+; bankos
+(define account 0)  ; kezdetkebn 0 Ft.-om van
+; elofelt.: amount egy szam, >= 0
+(define (pre-deposit? amount) 
+    (and (number? amount) (>= amount 0)))
+; utofelt.:
+(define (post-deposit? return-value)
+    (define acc (first return-value))
+    (define old (first (rest return-value)))
+    (define amo (first (rest (rest return-value))))
+    (and (number? return-value)
+         (= acc (+ old amo))))
+         
+(define/contract (deposit amount) (-> pre-deposit? post-deposit?)
+    (define old-acc account)
+    (set! account (+ account amount))    ; set! szint.: mit-valtoztatok uj-ertek
+    (list account old-acc amount))
+
+
+;withdraw elofelt.:  amount az szam 
+;                    amount>= 500
+;                    amount oszthato 500-zal
+;                    amount <= account
+(define (pre-withdraw? amount)
+    (and (number? amount) (>= amount 500) (= 0 (modulo amount 500)) (<= amount account)))
+;utofelt.:
+(define (post-withdraw? amount) #t)
+(define/contract (withdraw amount) (-> pre-withdraw? post-withdraw?)
+    (set! account (- account amount))
+    account)  
+
+(writeln (first (deposit 100)))    
+(writeln (first (deposit 1000)))
+(writeln (withdraw 500))
+
+; megnezni Java-ban assert-et, C#-ban system.diagnostics.debug-ot (usingolni kell az asserthez) jegyzet!!!

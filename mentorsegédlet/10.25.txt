@@ -1,0 +1,78 @@
+; 10.25.
+; for, regexp, match
+(define (my-sum1 lst)
+    (cond
+        [(empty? lst) 0]
+        [else 
+            (define fej (first lst))
+            (define farok (rest lst))
+            (define farok-ertek (my-sum1 farok))
+            (+ fej farok-ertek)]))
+            
+(writeln (my-sum1 (list 2 3 4)))
+
+; for szintaxisa:
+; (for ([tól_ig]) (kiszamitasi szabaly))
+(define (my-sum2 lst)  
+    (define x 0)    ; lokalis valtozo
+    (for ([i (in-list lst)])  ; az i-vel megyek vegig, in-list nem muszaj oda de elv gyorsabb lesz tollllle
+        (set! x (+ x i)))
+    x)
+    
+; set: annak adok erteket. aminek meg nincs
+; set!: annak, aminek van
+; x = x + 1     <=>     (set! x (+ x 1))
+; x = x + i     <=>     (set! x (+ x i))
+
+; mellekhatas: valami megvaltozik ami a kulvilagban van (pl fentebb x)
+; !: mellekhatas veszely
+; a tiszta funkcionalis prognyelvkre az a jellemzo, hogy mellekhatast csinalni nehez/lehetetlen
+; racketban persze lehet (nem tisztan funkcionalis)
+
+(writeln (my-sum2 (list 2 3 4)))
+
+(define (my-count x lst)    ; megszamolja  hanyszor van benn lstben
+    (define y 0)            ; lok valtozo, ezt fogjuk visszaadni
+    (for ([i (in-list lst)])
+        (if (= x i) (set! y (+ y 1)) void)) ; void -> ha nem kell csinalni semmit
+    y)
+
+(writeln (my-count 2 (list 1 2 3 2 4 2)))
+
+; for-ral paros-szamok szuroje
+(define (paros-szuro lst)
+    (define ki empty)
+    (for ([i (in-list lst)])
+        (if (= (modulo i 2) 0) (set! ki (append ki (list i))) void))
+    ki)
+    
+(writeln (paros-szuro (list 2 7 6 5 5 4 9 1 2)))
+
+(define (paros-sum lst)
+    (define ki 0)
+    (for ([i (in-list lst)])
+        (if (= (modulo i 2) 0) (set! ki (+ ki i)) void))
+    ki)
+
+(writeln (paros-sum (list 2 5 4 9 2 3 1 6)))
+
+; regexp
+;(writeln (regexp-match? #rx"l?t" "lt alma a fa alaaatt"))
+; regexp-math-positions a poziciojat irja ki, 0 az elso index
+; regexp vagy #rx-szel kezdodik, vagy #px-szel
+; px-ben tobb a lehetoseg
+; 1..1 = ., pl. a.c
+; 0..1 = valami? = a valamibol 0 vagy 1
+; 0..n = valami*
+; 1..n = valami+
+
+
+(define s "alma a fa alatt")
+(define rx #rx"[abc]a+t")
+(writeln (regexp-match-positions rx s))
+(define poz (regexp-match-positions rx s))
+(define x (car (first poz)))
+(define y (cdr (first poz)))
+(writeln (substring s x y))
+
+; ^ ezekitt nemjok valamiert

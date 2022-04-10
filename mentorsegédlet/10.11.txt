@@ -1,0 +1,138 @@
+(define (sum lst)
+    (cond 
+        [(empty? lst) 0]
+        [else
+            (+ (first lst) (sum(rest lst)))]))
+            
+(writeln (sum (list 4 5 6)))
+; akkor mondjuk egy rekurziv fvre, hogy farok rekurziv
+; ha az utolso hivas (a reku agon) a rekurziv hivas
+; minek kellene lennie az utolso hivasnak, hogy ez farok rekurziv legyen?
+; rekurziv hivasnak, azaz: (sum farok)
+; MIERT JO A FAROK REKURZIO?
+; azert, mert ez egy deklerativ nyelv, azaz a keretrendszer dönti el, hogyan kell futtatni,
+; megoldani a feladatot, és ha farok rekurziv a fv, akkor abbol tud ciklust csinalni
+; a ciklus gyorsabb, mint a rekurzio, mert nem kell hozza VEREM!!
+; ahhoz, hogy ítirjuk, akkumulatort kell hasznalni
+; abban taroljuk a reszeredmenyeket, onnan lehet felismerni, 
+; hogy ha az ures listanal az AKKU-t kell visszaadni, akkor az biztos,
+; hogy akkumulatoros
+; szokas: egyparameteres hivja a ketparameterst, ahol az egyik parameter az akkumulator
+
+(define (sum1 lst) (sum2 0 lst))
+; az akku-kezdo-erteke mindig ugyan az, amit a sima, nem farok rekurziv fv. visszaad az ures listara
+(define (sum2 akku lst)
+; ugy kell csinalni, hogy az ures listanal, az akku-t adja vissza
+    (cond
+        [(empty? lst) akku]
+; a rekurziv agon az akku-ba teszem bele a reszeredmenyt
+; arra kell gondolnom, hogyha ures lesz a listam, akkor 
+; az akku-t adom vissza
+; trukk: vegiggondolom, hogy mi van akkor, ha a lista mar csak egy elemu
+; tegyuk fel, hogy ez a hivas: (sum2 15 (list 5)) -> 20
+        [else
+            (sum2 (+ akku (first lst)) (rest lst))]))
+            
+(writeln (sum1 (list 4 5 6 5)))
+
+;---------------------
+
+(define (prod lst)
+    (cond
+        [(empty? lst) 1]
+        [else
+            (* (first lst) (prod (rest lst)))]))
+(writeln (prod (list 1 2 3 4)))
+; feladat prod1 és prod2, prod2 farok rek
+
+(define (prod1 lst) (prod2 1 lst))
+(define (prod2 akku lst)
+    (cond
+        [(empty? lst) akku]
+        [else
+            (prod2 (* akku (first lst)) (rest lst))]))
+            
+(writeln (prod1 (list 1 2 3 4)))
+
+;---------------------
+; nem farok rekurziv max
+(define (my-max lst)
+    (cond
+        [(empty? lst) +nan.0]
+        [(empty? (rest lst)) (first lst)]
+        [else
+            (define fej (first lst))
+            (define farok-ertek (my-max (rest lst)))
+            (if (> fej farok-ertek) fej farok-ertek)]))
+            
+(writeln (my-max(list 5 8 4)))
+
+;-------------------
+; max farok rekurzivan
+
+(define (max1 lst)
+    (cond
+        [(empty? lst) nan.0]
+        [else (max2 (first lst) (rest lst))]))
+        
+(define (max2 akku lst)
+    (cond
+        [(empty? lst) akku]
+        ; (max2 15 (list 20)) -> 20
+        ; (max2 15 (list 20 30)) -> 30 -> (max 20 (list 30))
+        ; (max2 8 (list 4 5 3)) -> (max2 8 (list 5 3)) -> (max2 8 (list 3))
+        [else 
+            (define fej (first lst))
+            (define farok (rest lst))
+            (max2 (if (> akku fej) akku fej) farok)]))
+            
+(writeln (max1 (list 17 6 18 2)))
+;--
+(define (max11 lst)
+    (cond 
+        [(empty? lst ) nan.0]
+        [else (max22 (first lst) lst)]))
+(define (max22 akku lst)
+    (cond
+        [(empty? (rest lst)) akku]
+        [else
+            (define fej (first lst))
+            (define farok (rest lst))
+            (max22 (if (> akku fej) akku fej) farok)]))
+            
+            
+;unio farok rek!?
+(writeln (max11 (list 17 6 18 2)))
+
+;--- list->halmaz nem farok rekurzivan
+(define (list->halmaz lst)
+    (cond
+        [(empty? lst) empty]
+        [else
+            (define fej (first lst))
+            (define farok (rest lst))
+            (if (member fej farok)
+                ; akkor eldobom:
+                (list->halmaz farok)
+                ;egyebkent megtartom
+                (cons fej (list->halmaz farok)))]))
+
+(writeln (list->halmaz (list 1 1 2 2 1 3)))
+
+;--- list->halmaz farok rek
+(define (l-h1 lst) (l-h2 empty lst))
+(define (l-h2 akku lst)
+    (cond 
+        [(empty? lst) akku]
+        [else
+            (define fej (first lst))
+            (define farok (rest lst))
+            (define akku-uj 
+                (if (member fej akku) akku (cons fej akku)))
+            (l-h2 akku-uj farok)]))
+
+
+(writeln  (l-h1 (list 1 1 2 2 1 3)))    
+; 1. zh: 10.18.:
+; string kezeles, if, lista kezeles, halmazok, farok-rekurzio
+; 5 feladat, ahany jo, ahanyas :O

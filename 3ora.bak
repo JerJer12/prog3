@@ -1,0 +1,11 @@
+#lang racket
+
+;LISTA KEZELÉS
+
+;adatszerkezetet vizsgáló kérdéssor
+
+;egyszerű vagy összetett?
+;egyszerű ha csak egy adatot tud tárrolni, ha többet akkor összetett
+
+;homogén vagy inthomogén?
+;egyféle vagy többféle adattípust tárolhat

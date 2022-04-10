@@ -1,0 +1,5 @@
+#lang racket
+
+;pattern matching = minta illesztés
+;deklaratív oldalon a = 1; 1 = a, mindkettő ugyanazt jelenti
+;Mert '=' jel nem az értékadás, hanem a intaillesztés
