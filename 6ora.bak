@@ -1,0 +1,34 @@
+#lang racket
+;6.óra
+
+;Rekurzió vs ciklusok
+
+;a két programozói módszer ugyanolyan erősségű,
+;azaz amit meg tudok oldani rekurzióval azt meg tudom oldani ciklusasl is
+;és fordítva
+;de a rekurzió magasabb absztrakciós szinten áll,
+;ezért gyakran könnyebb megérteni
+;de a rekurzióhoz kell verem, mert minden fg. hívás előtt kell
+;menteni a lokális vátozokat és a regiszterek értékét
+;ezért a ciklus gyorsabb lesz és keveebb memoriát használ
+;van egy arany középút
+;olyan rekurzió, amelyből ciklust lehet fordítani
+;ezt farok reurziónak hívják
+
+;FAROK REKURZIÓ
+;def (farok reku fg): Azt mondjuk, hogy az f fg. farok rekurzív <>
+;1. az f fg rekurzív és
+;2. az fg törzsében a rekurzív hívás az utolsó helyen áll
+
+;f(x) = if (x==1) 1 else g(x) + f(x-1);
+;mivel az utolsó hívás az összeadás, ezért nem farok rekurzív
+
+;f(x,y) = if (x==1) 1+y else f(x-1,g(x));
+;mivel az utolsó hívás a rekurzív hívás,
+;ezért ez farok rekurzív
+
+;ahhoz, hogy farok rku fg-t tudjuk írni
+;gyakran akkumulátort kell használni
+; - az akkumulátor egy plusz paraméter
+; - az akku-ban gyűjtőm a részeredményekért, ezért
+; - a nem reku ágon az
