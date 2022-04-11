@@ -1,0 +1,17 @@
+#lang racket
+
+;1
+
+(define (paratlan-szuro lst)
+    (cond
+        [(empty? lst) (list )]
+        [else
+            (define fej (first lst))
+            (define farok (rest lst))
+            (define farok-ertek(paratlan-szuro farok))
+            (if(number? fej)(if(odd? fej)(cons fej farok-ertek) (paratlan-szuro farok)) farok-ertek)
+        ]
+    )
+)
+
+(writeln (paratlan-szuro (list 2 5 4 7 "alma")))
