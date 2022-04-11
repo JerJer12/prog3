@@ -1,0 +1,14 @@
+#lang racket
+
+;saját próba
+
+;1 paratlan szuro lst
+
+(define (szuro lst)
+  (cond
+    [(empty? lst) (list)]
+    [else
+     (define fej (first lst))
+     (define farok (rest lst))
+     (define farok-ertek (szuro farok))
+     (if (number? fej) (if (odd? fej) (cons fej farok-ertek) (szuro farok)))]
