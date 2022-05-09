@@ -1,0 +1,15 @@
+#lang racket
+;1
+;ha minden elemre nézve igaz csak akkor ad vissza igazat
+
+(define/contract (for-all func lst)
+  (-> (number? boolean?) list? boolean?)
+  (match lst
+    [(list ) #t]
+    [(cons fej farok)
+     (define farok-ertek (for-all func farok))
+     (and (func fej) farok-ertek)]))
+
+(writeln (for-all even? (list 1 2 3 4 5)))
+
+;2
